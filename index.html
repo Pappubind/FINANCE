@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial IQ Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e9e8f 0%, #2ecc71 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(30, 158, 143, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e9e8f 0%, #2ecc71 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .timer {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e9e8f 0%, #2ecc71 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(30, 158, 143, 0.3);
+        }
+
+        .timer.warning {
+            animation: shake 0.5s;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .question-number {
+            color: #1e9e8f;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            color: #2c3e50;
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 18px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .option:hover {
+            background: #e8f8f5;
+            border-color: #1e9e8f;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #1e9e8f 0%, #2ecc71 100%);
+            border-color: #1e9e8f;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #7f8c8d;
+            transform: translateX(-3px);
+        }
+
+        .btn-prev:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #1e9e8f 0%, #2ecc71 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(30, 158, 143, 0.3);
+        }
+
+        .btn-next:hover {
+            transform: translateX(3px);
+            box-shadow: 0 7px 20px rgba(30, 158, 143, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-container {
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e9e8f 0%, #2ecc71 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 15px 35px rgba(30, 158, 143, 0.4);
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .result-text {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+
+        .result-description {
+            font-size: 16px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24">
+                    <rect x="4" y="14" width="4" height="7" />
+                    <rect x="10" y="10" width="4" height="11" />
+                    <rect x="16" y="6" width="4" height="15" />
+                </svg>
+            </div>
+            <h1>Financial IQ Assessment</h1>
+            <p class="subtitle">Evaluate your financial knowledge and habits</p>
+        </div>
+
+        <div id="quizContent">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Progress: 0 of 20 questions • 0%</div>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer" id="timer">1:00</div>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-prev" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <div id="resultsContent" style="display: none;">
+            <div class="results-container">
+                <h2 class="result-text">Your Financial IQ Score</h2>
+                <div class="score-circle" id="scoreCircle">0</div>
+                <p class="result-description" id="resultDescription"></p>
+                <button class="btn-restart" onclick="restartQuiz()">Retake Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "I channelize savings into investments regularly. They do not lie idle in bank savings accounts.",
+            "I organize and protect all my financial statements and online login details securely.",
+            "I am aware of charges by insurance, investment, and credit card companies for the various products I have taken.",
+            "I am aware of how my employment benefits like PF, Superannuation, Gratuity, and Insurance are structured.",
+            "I am aware of all the income tax exemptions & deductions available to me and I am utilizing them.",
+            "I know my family's actual monthly & annual expenses and we follow a budgeted expenditure plan.",
+            "I have calculated and know my net worth (all assets minus all liabilities).",
+            "I have an emergency fund to prepare me for job/business loss and medical emergencies.",
+            "I have health Insurance coverage for myself and my family members.",
+            "I have a term insurance life cover which is good enough for my family in my absence.",
+            "I have identified my financial goals with specific amounts and dates.",
+            "I always make all my investments with a purpose/for a future goal. Not on an ad-hoc basis.",
+            "I have a consolidated portfolio of Mutual Funds, Insurance, Deposits, Stocks & other investments.",
+            "I am aware of how much funds I require to retire peacefully and manage the expenses for 25-30 years.",
+            "I review the performance of all my investments regularly (at least once a year).",
+            "I am sure that all my investments are nominated to the person of my choice.",
+            "I have a Will in place and I am sure of how my assets will be distributed in case of my untimely death.",
+            "I do some kind of charity every year for those who are not as fortunate as I am.",
+            "I involve my spouse in all money-related decisions and she/he is aware of its relevance to our family.",
+            "I regularly Invest in myself to upgrade my skills and knowledge which helps me in my career growth."
+        ];
+
+        const options = ["I do", "I somewhat do", "I don't do"];
+        let currentQuestion = 0;
+        let answers = new Array(20).fill(null);
+        let questionTimers = new Array(20).fill(60); // Store timer for each question
+        let timerInterval;
+        let timeLeft = 60;
+
+        function startTimer() {
+            // Only start timer if it's not already running
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 10) {
+                        document.getElementById('timer').classList.add('warning');
+                    } else {
+                        document.getElementById('timer').classList.remove('warning');
+                    }
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        // If no answer selected, mark as "I don't do" (0 points)
+                        if (answers[currentQuestion] === null) {
+                            answers[currentQuestion] = 2; // "I don't do"
+                        }
+                        
+                        if (currentQuestion < questions.length - 1) {
+                            currentQuestion++;
+                            timeLeft = 60; // Reset timer for next question
+                            loadQuestion();
+                        } else {
+                            // Last question - auto submit
+                            showResults();
+                        }
+                    }
+                }, 1000);
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function loadQuestion() {
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1}`;
+            document.getElementById('questionText').textContent = questions[currentQuestion];
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                
+                if (answers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            updateProgress();
+            updateButtons();
+            updateTimerDisplay();
+            startTimer();
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            
+            const optionDivs = document.querySelectorAll('.option');
+            optionDivs.forEach((div, i) => {
+                div.classList.toggle('selected', i === index);
+            });
+            
+            updateButtons();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = 
+                `Progress: ${currentQuestion} of ${questions.length} questions • ${Math.round(progress)}%`;
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === null;
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'Finish';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next';
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) return;
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                // Only reset timer if this is a new question (not previously visited)
+                if (answers[currentQuestion] === null) {
+                    timeLeft = 60;
+                }
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                // Don't reset timer when going back
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            answers.forEach(answer => {
+                if (answer === 0) score += 2;
+                else if (answer === 1) score += 1;
+            });
+            
+            const maxScore = questions.length * 2;
+            const percentage = Math.round((score / maxScore) * 100);
+            
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+            
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            
+            let description = '';
+            if (percentage >= 80) {
+                description = '🌟 Excellent! You have strong financial habits and knowledge. Keep up the great work!';
+            } else if (percentage >= 60) {
+                description = '👍 Good! You have decent financial awareness, but there\'s room for improvement.';
+            } else if (percentage >= 40) {
+                description = '📚 Fair. Consider learning more about financial planning to improve your financial health.';
+            } else {
+                description = '💪 Time to focus on your finances! Start building better financial habits today.';
+            }
+            
+            document.getElementById('resultDescription').textContent = description;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = new Array(20).fill(null);
+            document.getElementById('resultsContent').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            loadQuestion();
+        }
+
+        // Initialize the quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
